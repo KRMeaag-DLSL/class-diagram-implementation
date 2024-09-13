@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <stdlib.h>
@@ -68,7 +67,6 @@ class ShoppingCart : protected Product{
         listProduct shopListBuffer;
 
     public:
-
         // Adds products to cart
         void addToCart(int index, int quantity) {
             shopListBuffer.productIDList = productID[index];
@@ -171,9 +169,11 @@ int menu()
 void newCartItem(Product products, ShoppingCart* cart)
 {
     char choice;
+    bool exitChoice;
     string itemID;
     int productIndex;
     int amount;
+
     do
     {
         cout << "\nIs there anything you like? [Y/N]: ";
@@ -184,29 +184,46 @@ void newCartItem(Product products, ShoppingCart* cart)
     {
         return;
     }
-   
-    cout << "\nType the Product ID of the product you want: ";
-    cin >> itemID;
-
-    productIndex = products.checkList(itemID);
-
-    if (productIndex == -1)
-    {
-        cout << "\nProduct ID not found, Try Again!" << endl;
-        return;
-    }
 
     do {
-        cout << "\nHow many? ";
-        cin >> amount;
+        cout << "\nType the Product ID of the product you want: ";
+        cin >> itemID;
 
-        if (amount < 1)
+        productIndex = products.checkList(itemID);
+
+        if (productIndex == -1)
         {
-            cout << "\nAmount should be more than 0! Try again." << endl;
+            cout << "\nProduct ID not found, Try Again!" << endl;
+            return;
         }
-    } while (amount < 1);
 
-    cart->addToCart(productIndex, amount);
+        do {
+            cout << "\nHow many? ";
+            cin >> amount;
+
+            if (amount < 1)
+            {
+                cout << "\nAmount should be more than 0! Try again." << endl;
+            }
+        } while (amount < 1);
+
+        cart->addToCart(productIndex, amount);
+
+        do
+        {
+            cout << "Do you want to add another product? [Y/N]: ";
+            cin >> choice;
+        } while (toupper(choice) != 'Y' && toupper(choice) != 'N');
+
+        if (toupper(choice) == 'Y')
+        {
+            exitChoice = true;
+        }
+        else
+        {
+            exitChoice = false;
+        }
+    } while (exitChoice);
 }
 
 // Orders the list of products in the shopping cart
